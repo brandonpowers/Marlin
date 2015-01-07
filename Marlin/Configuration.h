@@ -473,10 +473,38 @@ const bool Z_MAX_ENDSTOP_INVERTING = false; // set to true to invert the logic o
 //#define HOMING_FEEDRATE {50*60, 50*60, 4*60, 0}  // set the homing speeds (mm/min)
 #define HOMING_FEEDRATE {50*60, 50*60, 4*60}
 
-// default settings
+//******** Ordbot Step Calculations ********//
+// Belts and pulley (xy axis):
+//  Ramps Microstep Jumper Settings: 1/16 microsteps
+//  Stepper: Wangtai 42BYGHW609 StepAngle 1.8deg,
+//  Belt:    B28046-388 .080" (MXL) Pitch, 388 Teeth, 1/4"
+//  Pulley:  B17023 17.5mm Diameter
+//  Gear:    A_6T16M018DF6005 PULLEY MXL 18 TOOTH 5mm BORE
+//  Z-axis:  M8 x 1.25 x 245mm
+// 
+//  steps_per_mm = (motor_steps_per_rev * driver_microstep) / (belt_pitch * pulley_number_of_teeth)
+//  steps_per_mm = (360/1.8 * 16) / (.080*25.4 * 18)
+//  steps_per_mm = 3200 / 36.576
+//  steps_per_mm = 87.4891
+//
+// Lead Screw (z axis)
+//  steps_per_mm = (motor_steps_per_rev * driver_microstep) / thread_pitch
+//  steps_per_mm = (360/1.8 * 16) / 1.25
+//  steps_per_mm = 3200 / 1.25
+//  steps_per_mm = 2560
+//
+// Direct drive extruder:
+//  e_steps_per_mm = (motor_steps_per_rev * driver_microstep) / (hob_effective_diameter * pi)
+//
+// Extruder with gear reduction:
+//  e_steps_per_mm = (motor_steps_per_rev * driver_microstep) * (big_gear_teeth / small_gear_teeth) / PI / hob_effective_diameter
+//  e_steps_per_mm = (360/1.8 * 16) * (39 / 11) / (7 * 3.14159)
+//  e_steps_per_mm = 3200 * 3.5454 / 21.9912
+//  e_steps_per_mm = 515.91049
+//******************************************//
 
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   {78.7402,78.7402,200.0*8/3,760*1.1}  // default steps per unit for Ultimaker
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {80,80,200.0*8/3,760}
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {87.4891,87.4891,2560,515.91049}
 #define DEFAULT_MAX_FEEDRATE          {500, 500, 5, 25}    // (mm/sec)
 #define DEFAULT_MAX_ACCELERATION      {9000,9000,100,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for Skeinforge 40+, for older versions raise them a lot.
 
